@@ -1,1 +1,12 @@
-{"data":{"users":[{"username":"ryandefryan","email":"ryan@gmail.com","password":"abc12345","isVerified":true},{"username":"ryandefryan","email":"ryan@gmail.com","password":"abc12345","isVerified":true},{"username":"ryandefryan","email":"ryan@gmail.com","password":"abc12345","isVerified":true},{"username":"ryandefryan","email":"defryan@gmail.com","password":"abc12345","isVerified":true},{"username":"ryandefryan","email":"defryan@gmail.com","password":"abc12345","isVerified":true},{"username":"ryandefryan","email":"defryan@gmail.com","password":"abc12345","isVerified":true}]}}
+{
+  "data": {
+    "users": [
+      {
+        "username": "ryandefryan",
+        "email": "ryan@gmail.com",
+        "password": "abc12345",
+        "isVerified": true
+      }
+    ]
+  }
+}

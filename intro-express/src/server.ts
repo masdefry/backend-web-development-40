@@ -50,6 +50,68 @@ app.post('/api/users', (req: Request, res: Response) => {
   }
 });
 
+app.get('/api/users', (req: Request, res: Response) => {
+  try {
+    const usersJSON = fs.readFileSync('./src/database/users.json', 'utf-8'); // Buffer
+    const users = JSON.parse(usersJSON);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Users retrieved successfully',
+      data: users?.data?.users,
+    });
+  } catch (error: any) {
+    return res.status(error?.statusCode).json({
+      success: false,
+      message: error?.message,
+      data: {},
+    });
+  }
+});
+
+app.put('/api/users/:email', (req: Request, res: Response) => {
+  try {
+    const { email } = req.params;
+    const { username, password } = req.body;
+
+    const usersJSON = fs.readFileSync('./src/database/users.json', 'utf-8'); // Buffer
+    const users = JSON.parse(usersJSON);
+
+    const userIndex = users?.data?.users?.findIndex((user: any) => {
+      return user?.email === email;
+    });
+
+    if (userIndex === -1)
+      throw {
+        statusCode: 404,
+        message: `User with email = ${email} not found`,
+      };
+    
+    users.data.users[userIndex] = {
+      ...users?.data?.users[userIndex],
+      username: username,
+      password: password,
+    };
+
+    fs.writeFileSync('./src/database/users.json', JSON.stringify(users));
+
+    return res.status(200).json({
+      success: true,
+      message: 'User updated successfully',
+      data: {
+        email,
+        username,
+      },
+    });
+  } catch (error: any) {
+    return res.status(error?.statusCode).json({
+      success: false,
+      message: error?.message,
+      data: {},
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Application Running on PORT: ${PORT}`);
 });
