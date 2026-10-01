@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import fs from 'fs';
 
 const PORT: number = 8000;
 
@@ -7,26 +8,46 @@ const app = express();
 // Body Parser
 app.use(express.json());
 
-app.get('/', (req: Request, res: Response) => {
-  // 1. Body
-  // 2. URL   : Params & Query
-  // 3. Headers
+app.post('/api/users', (req: Request, res: Response) => {
+  try {
+    // username, email, password, isVerified
+    const { username, email, password, isVerified } = req.body;
 
-  return res.json({
-    message: 'Welcome to API Intro Express',
-  });
-});
+    if (password.length < 8 || password.length > 15)
+      throw {
+        statusCode: 400,
+        message: 'Password have between 5-15 characters',
+      };
 
-app.post('/handle-request/:slug', (req: Request, res: Response) => {
-  const data = req.body;
-  const params = req.params; 
-  console.log(params?.slug); 
-  const queries = req.query
-  console.log(queries?.sort); 
+    const usersJSON = fs.readFileSync('./src/database/users.json', 'utf-8'); // Buffer
+    const users = JSON.parse(usersJSON);
 
-  return res.json({
-    message: 'Handle request successful',
-  });
+    const isEmailExist = users?.data?.users.some((user: any) => {
+      return user?.email === email;
+    });
+
+    if (isEmailExist)
+      throw { statusCode: 409, message: 'Email is already exist' };
+
+    users?.data?.users?.push({ username, email, password, isVerified });
+    fs.writeFileSync('./src/database/users.json', JSON.stringify(users));
+
+    return res.status(201).json({
+      success: true,
+      message: 'User created successfully',
+      data: {
+        username,
+        email,
+        isVerified,
+      },
+    });
+  } catch (error: any) {
+    return res.status(error?.statusCode).json({
+      success: false,
+      message: error?.message,
+      data: {},
+    });
+  }
 });
 
 app.listen(PORT, () => {
