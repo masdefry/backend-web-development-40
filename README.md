@@ -16,11 +16,19 @@ Hello, Full Stack Web Development Students✌️!
 
         ➡️ npm i -D typescript@5.7.2 ts-node@10.9.2 nodemon
 
-4. Initiate Typescript Configuration
+4. Install Database Client
+
+            mysql           ➡️ npm i mysql2
+
+            posgresql       ➡️ npm i pg
+            
+                            ➡️ npm i @types/pg --save-dev
+
+5. Initiate Typescript Configuration
 
         ➡️ npx tsc --init
 
-5. Replace `tsconfig.json` with This Configuration:
+6. Replace `tsconfig.json` with This Configuration:
 
         {
             "compilerOptions": {
@@ -34,7 +42,7 @@ Hello, Full Stack Web Development Students✌️!
             }
         }
 
-6. Replace Property `scripts` on `package.json` with this Code:
+7. Replace Property `scripts` on `package.json` with this Code:
 
         "scripts": {
                 "dev": "nodemon src/server.ts",
@@ -42,6 +50,6 @@ Hello, Full Stack Web Development Students✌️!
                 "start": "node dist/server.js"
         },
 
-7. Running Express Typescript Projects
+8. Running Express Typescript Projects
 
         ➡️ npm run dev
