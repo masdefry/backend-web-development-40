@@ -16,14 +16,6 @@ Hello, Full Stack Web Development Students✌️!
 
         ➡️ npm i -D typescript@5.7.2 ts-node@10.9.2 nodemon
 
-4. Install Database Client
-
-            mysql           ➡️ npm i mysql2
-
-            posgresql       ➡️ npm i pg
-            
-                            ➡️ npm i @types/pg --save-dev
-
 5. Initiate Typescript Configuration
 
         ➡️ npx tsc --init
@@ -53,3 +45,77 @@ Hello, Full Stack Web Development Students✌️!
 8. Running Express Typescript Projects
 
         ➡️ npm run dev
+
+
+
+🧑‍💻 How to Setup Prisma ORM?
+
+    1. Install Package(s)
+
+            ➡️ npm install prisma @types/node @types/pg --save-dev
+
+            ➡️ npm install @prisma/client @prisma/adapter-pg pg dotenv 
+
+    2. Initialize Prisma ORM and Create a Prisma Postgres Database 
+
+            ➡️ npx prisma init --datasource-provider postgresql
+
+    3. Define Data Model
+
+            model User {
+                    id        String        @id @default(cuid())
+                    email     String        @unique
+                    name      String
+                    password   String
+
+                    user_addresses UserAddress[]
+
+                    createdAt   DateTime  @default(now())
+                    updatedAt   DateTime  @updatedAt
+                    deletedAt   DateTime?
+
+                    @@map("users")
+            }
+
+            model UserAddress{
+                    id        Int     @id @default(autoincrement())
+                    consignee String
+                    address   String
+
+                    userId    String @unique
+                    users User @relation(fields: [userId], references: [id])
+
+                    createdAt   DateTime  @default(now())
+                    updatedAt   DateTime  @updatedAt
+                    deletedAt   DateTime?
+
+                    @@map("user_addresses")
+            }
+
+    4. Edit DATABASE_URL on file `env`
+    
+    5. Create and Apply Prisma Migration
+
+            ➡️ npx prisma migrate dev --name init
+
+            ➡️ npx prisma generate
+
+
+    6. Instantiate Prisma Client
+
+                import "dotenv/config";
+                import { PrismaPg } from "@prisma/adapter-pg";
+                import { PrismaClient } from "../generated/prisma/client";
+
+                const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
+
+                export const prisma =
+                globalForPrisma.prisma ??
+                new PrismaClient({
+                adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }),
+                });
+
+                if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+
+    📝 
+    Always execute `npx prisma generate` after doing migrate! ⚠️
