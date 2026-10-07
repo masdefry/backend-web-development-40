@@ -54,7 +54,7 @@ Hello, Full Stack Web Development Students✌️!
 
             ➡️ npm install prisma @types/node @types/pg --save-dev
 
-            ➡️ npm install @prisma/client @prisma/adapter-pg pg dotenv 
+            ➡️ npm install @prisma/client@7 @prisma/adapter-pg pg dotenv 
 
     2. Initialize Prisma ORM and Create a Prisma Postgres Database 
 
@@ -104,18 +104,15 @@ Hello, Full Stack Web Development Students✌️!
     6. Instantiate Prisma Client
 
                 import "dotenv/config";
-                import { PrismaPg } from "@prisma/adapter-pg";
-                import { PrismaClient } from "../generated/prisma/client";
+                import { PrismaPg } from '@prisma/adapter-pg'
+                import { PrismaClient } from '../generated/prisma/client'
 
-                const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
+                const connectionString = `${process.env.DATABASE_URL}`
 
-                export const prisma =
-                globalForPrisma.prisma ??
-                new PrismaClient({
-                adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }),
-                });
+                const adapter = new PrismaPg({ connectionString })
+                const prisma = new PrismaClient({ adapter })
 
-                if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+                export { prisma }
 
     📝 
     Always execute `npx prisma generate` after doing migrate! ⚠️
