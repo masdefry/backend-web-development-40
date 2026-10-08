@@ -12,13 +12,165 @@ datasource db {
   provider = "postgresql"
 }
 
-model Members{
-  id        String            @id @default(uuid())
-  email     String            @db.VarChar(100) @unique
-  phoneNumber String          @db.VarChar(15)
-  identityNumber    Int       
-  address           String    @db.Text
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  deletedAt         DateTime? 
+model Member {
+  id             String      @id @default(uuid())
+  email          String      @unique @db.VarChar(100)
+  phoneNumber    String      @db.VarChar(15)
+  identityNumber Int
+  address        String      @db.Text
+  borrowings     Borrowing[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  deletedAt      DateTime?
+
+  @@map("members")
+}
+
+enum Categories {
+  POLITIC
+  ROMANCE
+  FICTION
+  COMEDY
+  HORROR
+  COMIC
+}
+
+model Book {
+  isbn              String          @id @db.VarChar(25)
+  title             String          @db.VarChar(100)
+  description       String          @db.Text
+  category          Categories
+  authorId          String
+  authors           Author          @relation(fields: [authorId], references: [id])
+  book_has_branches BookHasBranch[]
+  borrowing_items   BorrowingItem[]
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  deletedAt         DateTime?
+
+  @@map("books")
+}
+
+model Author {
+  id        String    @id @default(uuid())
+  name      String    @db.VarChar(125)
+  books     Book[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("authors")
+}
+
+model Branch {
+  id                String          @id @default(cuid())
+  name              String          @db.VarChar(100)
+  location          String          @db.VarChar(225)
+  staffs            Staff[]
+  book_has_branches BookHasBranch[]
+  borrowings        Borrowing[]
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  deletedAt         DateTime?
+
+  @@map("branches")
+}
+
+model Staff {
+  id          String       @id @default(uuid())
+  fullName    String       @db.VarChar(100)
+  email       String       @unique
+  phoneNumber String       @db.VarChar(15)
+  password    String       @db.VarChar(25)
+  branchId    String
+  branches    Branch       @relation(fields: [branchId], references: [id])
+  shiftId     String
+  shifts      Shift        @relation(fields: [shiftId], references: [id])
+  attendances Attendance[]
+  borrowings  Borrowing[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  deletedAt   DateTime?
+
+  @@map("staffs")
+}
+
+model Shift {
+  id        String    @id @default(cuid())
+  startTime DateTime  @db.Time()
+  endTime   DateTime  @db.Time()
+  staffs    Staff[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("shifts")
+}
+
+model Attendance {
+  id            String    @id @default(cuid())
+  clockIn       DateTime
+  clockOut      DateTime?
+  lateCheckin   Int       @default(0)
+  earlyCheckout Int?
+  date          DateTime  @default(now()) @db.Date
+  staffId       String
+  staffs        Staff     @relation(fields: [staffId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  @@map("attendances")
+}
+
+model BookHasBranch {
+  id        String    @id @default(cuid())
+  bookId    String
+  books     Book      @relation(fields: [bookId], references: [isbn])
+  branchId  String
+  branches  Branch    @relation(fields: [branchId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@map("book_has_branches")
+}
+
+enum Status {
+  BORROWED
+  OVERDUE
+  RETURNED
+}
+
+model Borrowing {
+  id              String          @id @default(cuid())
+  borrowDate      DateTime
+  dueDate         DateTime
+  returnDate      DateTime
+  status          Status
+  memberId        String
+  members         Member          @relation(fields: [memberId], references: [id])
+  staffId         String
+  staffs          Staff           @relation(fields: [staffId], references: [id])
+  branchId        String
+  branches        Branch          @relation(fields: [branchId], references: [id])
+  borrowing_items BorrowingItem[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  deletedAt       DateTime?
+
+  @@map("borrowings")
+}
+
+model BorrowingItem {
+  id          String    @id @default(cuid())
+  bookId      String
+  books       Book      @relation(fields: [bookId], references: [isbn])
+  borrowingId String
+  borrowings  Borrowing @relation(fields: [borrowingId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  @@map("borrowing_items")
 }
