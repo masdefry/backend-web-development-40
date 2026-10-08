@@ -2,25 +2,25 @@ Hello, Full Stack Web Development Students✌️!
 
 🧑‍💻 How to Setup Express Typescript?
 
-1. Create New Directory for ExpressTS Projects
+1.  Create New Directory for ExpressTS Projects
 
-2. Inside New Directory, Execute this Command:
+2.  Inside New Directory, Execute this Command:
 
         ➡️ npm init --yes
 
-3. Install Express Typescript & Nodemon
+3.  Install Express Typescript & Nodemon
 
-        ➡️ npm i express 
+        ➡️ npm i express
 
         ➡️ npm i --save-dev @types/express
 
         ➡️ npm i -D typescript@5.7.2 ts-node@10.9.2 nodemon
 
-5. Initiate Typescript Configuration
+4.  Initiate Typescript Configuration
 
         ➡️ npx tsc --init
 
-6. Replace `tsconfig.json` with This Configuration:
+5.  Replace `tsconfig.json` with This Configuration:
 
         {
             "compilerOptions": {
@@ -34,7 +34,7 @@ Hello, Full Stack Web Development Students✌️!
             }
         }
 
-7. Replace Property `scripts` on `package.json` with this Code:
+6.  Replace Property `scripts` on `package.json` with this Code:
 
         "scripts": {
                 "dev": "nodemon src/server.ts",
@@ -42,21 +42,19 @@ Hello, Full Stack Web Development Students✌️!
                 "start": "node dist/server.js"
         },
 
-8. Running Express Typescript Projects
+7.  Running Express Typescript Projects
 
         ➡️ npm run dev
-
-
 
 🧑‍💻 How to Setup Prisma ORM?
 
     1. Install Package(s)
 
-            ➡️ npm install prisma @types/node @types/pg --save-dev
+            ➡️ npm install prisma@7 @types/node @types/pg --save-dev
 
-            ➡️ npm install @prisma/client@7 @prisma/adapter-pg pg dotenv 
+            ➡️ npm install @prisma/client@7 @prisma/adapter-pg@7 pg dotenv@16
 
-    2. Initialize Prisma ORM and Create a Prisma Postgres Database 
+    2. Initialize Prisma ORM and Create a Prisma Postgres Database
 
             ➡️ npx prisma init --datasource-provider postgresql
 
@@ -93,7 +91,7 @@ Hello, Full Stack Web Development Students✌️!
             }
 
     4. Edit DATABASE_URL on file `env`
-    
+
     5. Create and Apply Prisma Migration
 
             ➡️ npx prisma migrate dev --name init
@@ -114,5 +112,23 @@ Hello, Full Stack Web Development Students✌️!
 
                 export { prisma }
 
-    📝 
+    📝
     Always execute `npx prisma generate` after doing migrate! ⚠️
+
+🧑‍💻 Configuration using Import Alias (Import @):
+
+    1. Add this Configuration on File `tsconfig.json`:
+
+                "moduleResolution": "node",
+                "baseUrl": ".",
+                "paths": {
+                        "@/*": ["src/*"]
+                },
+
+    2. If there is error like:
+     
+                `Option 'moduleResolution=node10' is deprecated and will stop functioning in TypeScript 7.0. Specify compilerOption '"ignoreDeprecations": "6.0"' to silence this error.
+
+                SOLVE with Adding this Configuration on File `tsconfig.json`:
+
+                        "ignoreDeprecations": "6.0"
