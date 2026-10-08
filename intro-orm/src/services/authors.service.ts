@@ -12,6 +12,10 @@ import {
 //     deletedAt?: Date;
 // }
 
+interface AuthorGetInput {
+  page: number;
+}
+
 export const createAuthorService = async ({ name }: AuthorCreateInput) => {
   const countAuthorName = await prisma.author.count({
     where: {
@@ -64,4 +68,31 @@ export const deleteAuthorService = async ({ id }: AuthorUpdateInput) => {
       id: id as string,
     },
   });
+};
+
+const LIMIT = 2;
+
+export const getAuthorsService = async (page: number) => {
+  const offset = (page - 1) * LIMIT;
+
+  const authors = await prisma.author.findMany({
+    where: {
+      deletedAt: null,
+    },
+    take: LIMIT,
+    skip: offset,
+    orderBy: {
+      createdAt: 'asc',
+    },
+  });
+
+  const totalAuthors = await prisma.author.count(); 
+
+  const totalPage = Math.ceil(totalAuthors / LIMIT); 
+
+  return {
+    totalPage, 
+    limit: LIMIT, 
+    authors
+  }
 };

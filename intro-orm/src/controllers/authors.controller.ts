@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import {
   createAuthorService,
   deleteAuthorService,
+  getAuthorsService,
   updateAuthorService,
 } from '../services/authors.service';
 
@@ -58,6 +59,36 @@ export const deleteAuthorController = async (req: Request, res: Response) => {
       success: true,
       message: `Author with id = ${id} deleted successfully`,
       data: deletedAuthor,
+    });
+  } catch (error) {
+    if (error instanceof Error)
+      return res.status(500).json({
+        success: false,
+        message: error?.message,
+        data: {},
+      });
+  }
+};
+
+export const getAuthorsController = async (req: Request, res: Response) => {
+  try {
+    const { page } = req?.query;
+
+    const { totalPage, limit, authors } = await getAuthorsService(
+      parseInt(page as string),
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Authors retrived successfully',
+      data: {
+        authors,
+      },
+      meta: {
+        page: page,
+        limit,
+        totalPage,
+      },
     });
   } catch (error) {
     if (error instanceof Error)
