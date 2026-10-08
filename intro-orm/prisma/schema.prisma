@@ -53,7 +53,7 @@ model Book {
 
 model Author {
   id        String    @id @default(uuid())
-  name      String    @db.VarChar(125)
+  name      String    @db.VarChar(125) 
   books     Book[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
