@@ -1,6 +1,6 @@
+import 'dotenv/config';
 import express from 'express';
 import { authorsRoute } from './routes/authors.route';
-import 'dotenv/config';
 import { BooksRoute } from './features/books/books.route';
 
 const PORT: number = parseInt(process.env.PORT!);

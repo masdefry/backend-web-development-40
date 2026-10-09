@@ -24,3 +24,4 @@ export const BooksRoute = Router();
 
 BooksRoute.post('/', BooksController.create);
 BooksRoute.put('/', BooksController.update);
+BooksRoute.get('/', BooksController.get); 
