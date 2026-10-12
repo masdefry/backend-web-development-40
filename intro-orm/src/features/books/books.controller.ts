@@ -31,12 +31,22 @@ export class BooksController {
 
   static async get(req: Request, res: Response) {
     try {
-      const books = await BooksService.get();
+      const { page = 1 } = req.query;
+
+      const { total, totalPage, limit, books } = await BooksService.get(
+        parseInt(page as string),
+      );
 
       res.status(200).json({
         success: true,
         message: `Book retrieved successfully`,
         data: books,
+        meta: {
+          total,
+          page,
+          totalPage,
+          limit,
+        },
       });
     } catch (error) {
       if (error instanceof Error)

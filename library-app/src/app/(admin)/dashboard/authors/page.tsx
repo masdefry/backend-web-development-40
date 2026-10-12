@@ -4,7 +4,7 @@ import { PaginatedApiResponse } from '@/types/api-response.type';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 
-type Author = {
+export type Author = {
   id: string;
   name: string;
   createdAt: Date;
@@ -71,3 +71,24 @@ export default function AuthorsPage() {
     </>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+  CHALLENGE: 
+  1. Lengkapi end-point get books (tambahkan pagination meta: page, limit, total, totalPage)
+  2. Buat halaman dashboard > books dan lakukan get books untuk di tampilkan ke list tabel 
+*/
