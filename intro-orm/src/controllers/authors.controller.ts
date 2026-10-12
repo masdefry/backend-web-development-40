@@ -80,10 +80,10 @@ export const getAuthorsController = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: 'Authors retrived successfully',
-      data: authors, 
+      message: 'Authors retrieved successfully',
+      data: authors,
       meta: {
-        page: page,
+        page: Number(page),
         limit,
         totalPage,
       },

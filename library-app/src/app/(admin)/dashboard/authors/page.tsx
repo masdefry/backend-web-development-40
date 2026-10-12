@@ -1,18 +1,28 @@
 'use client';
+import { axiosInstance } from '@/lib/axios-instance.lib';
+import { PaginatedApiResponse } from '@/types/api-response.type';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import { format } from 'date-fns';
 
+type Author = {
+  id: string;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date;
+};
+
 export default function AuthorsPage() {
-  const { data, isError, error } = useQuery({
+  const { data: authorsData } = useQuery({
     queryKey: ['authors'],
     queryFn: async () => {
-      const res = await axios.get('http://localhost:8000/api/v1/authors');
+      const res =
+        await axiosInstance.get<PaginatedApiResponse<Author[]>>('/authors');
 
-      return res?.data?.data
+      return res?.data?.data;
     },
   });
-  console.log(data); 
+
   return (
     <>
       <div className='flex justify-between items-center'>
@@ -36,12 +46,12 @@ export default function AuthorsPage() {
               </tr>
             </thead>
             <tbody>
-              {data?.map((item: any, index: number) => {
+              {authorsData?.map((author: Author, index: number) => {
                 return (
                   <tr key={index}>
-                    <th>{item?.id}</th>
-                    <td>{item?.name}</td>
-                    <td>{format(item?.createdAt, 'yyyy-MMMM-dd HH:mm:ss')}</td>
+                    <th>{author?.id}</th>
+                    <td>{author?.name}</td>
+                    <td>{format(author?.createdAt, 'yyyy-MMMM-dd HH:mm:ss')}</td>
                   </tr>
                 );
               })}

@@ -18,7 +18,10 @@ const corsOptions: CorsOptions = {
     /*
       IF ORIGIN NOT INSIDE ALLOWED_ORIGIN
     */
-    if (!ALLOWED_ORIGINS?.includes(origin!))
+    if (
+      !ALLOWED_ORIGINS?.includes(origin!) &&
+      process.env.NODE_ENV === 'PRODUCTION'
+    )
       return callback(new Error('Origin not allowed by CORS'), false);
 
     return callback(null, true);
