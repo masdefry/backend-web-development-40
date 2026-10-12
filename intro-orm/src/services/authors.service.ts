@@ -74,7 +74,6 @@ const LIMIT = 2;
 
 export const getAuthorsService = async (page: number) => {
   const offset = (page - 1) * LIMIT;
-
   const authors = await prisma.author.findMany({
     where: {
       deletedAt: null,

@@ -1,11 +1,11 @@
 import { RiHome9Line } from 'react-icons/ri';
-import { RiIdCardLine } from 'react-icons/ri';
+import { GoPeople } from 'react-icons/go';
 export default function Sidebar() {
   return (
     <>
       <div className='pt-7 px-5 hidden is-drawer-open:block'>
-        <h1 className='text-3xl font-bold'>RuangBaca</h1>
-        <span className='text-gray-500'>Library Dashboard App</span>
+        <h1 className='text-3xl font-bold text-white'>RuangBaca</h1>
+        <span className='text-blue-300'>Library Dashboard App</span>
       </div>
       <div className='flex justify-center w-full pt-5'>
         <div className='text-center pt-2 font-bold w-10 h-10 bg-gray-300 rounded-full is-drawer-close:block is-drawer-open:hidden'>
@@ -13,25 +13,22 @@ export default function Sidebar() {
         </div>
       </div>
       <ul className='menu w-full grow flex flex-col gap-3'>
-        {/* List item */}
         <li>
           <button
-            className='is-drawer-close:tooltip is-drawer-close:tooltip-right'
+            className='is-drawer-close:tooltip is-drawer-close:tooltip-right text-white '
             data-tip='Homepage'
           >
             <RiHome9Line className='text-xl' />
             <span className='is-drawer-close:hidden'>Homepage</span>
           </button>
         </li>
-
-        {/* List item */}
         <li>
           <button
-            className='is-drawer-close:tooltip is-drawer-close:tooltip-right'
+            className='is-drawer-close:tooltip is-drawer-close:tooltip-right text-white '
             data-tip='Settings'
           >
-            <RiIdCardLine className='text-xl' />
-            <span className='is-drawer-close:hidden'>Employees</span>
+            <GoPeople className='text-xl' />
+            <span className='is-drawer-close:hidden'>Authors</span>
           </button>
         </li>
       </ul>

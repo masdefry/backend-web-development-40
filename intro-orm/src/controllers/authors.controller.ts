@@ -72,7 +72,7 @@ export const deleteAuthorController = async (req: Request, res: Response) => {
 
 export const getAuthorsController = async (req: Request, res: Response) => {
   try {
-    const { page } = req?.query;
+    const { page = 1 } = req?.query;
 
     const { totalPage, limit, authors } = await getAuthorsService(
       parseInt(page as string),
@@ -81,9 +81,7 @@ export const getAuthorsController = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: 'Authors retrived successfully',
-      data: {
-        authors,
-      },
+      data: authors, 
       meta: {
         page: page,
         limit,
