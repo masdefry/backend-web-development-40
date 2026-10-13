@@ -1,5 +1,4 @@
 'use client';
-
 import { axiosInstance } from '@/lib/axios-instance.lib';
 import { PaginatedApiResponse } from '@/types/api-response.type';
 import { useQuery } from '@tanstack/react-query';
