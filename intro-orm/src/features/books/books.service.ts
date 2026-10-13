@@ -45,9 +45,8 @@ export class BooksService {
     });
   }
 
-  static async get(page: number) {
-    const LIMIT = 2; 
-    const offset = (page - 1) * LIMIT; 
+  static async get(page: number, limit: number) {
+    const offset = (page - 1) * limit;
 
     const books = await prisma.book.findMany({
       include: {
@@ -58,26 +57,26 @@ export class BooksService {
         },
       },
       where: {
-        deletedAt: null
-      }, 
-      take: LIMIT, 
-      skip: offset, 
+        deletedAt: null,
+      },
+      take: limit,
+      skip: offset,
     });
 
     const totalBooks = await prisma.book.count({
       where: {
-        deletedAt: null
-      }
-    }); 
+        deletedAt: null,
+      },
+    });
 
-    const totalPage = Math.ceil(totalBooks/LIMIT); 
+    const totalPage = Math.ceil(totalBooks / limit);
 
-    return{
-      total: totalBooks, 
-      totalPage, 
-      limit: LIMIT, 
-      books, 
-    }
+    return {
+      total: totalBooks,
+      totalPage,
+      limit,
+      books,
+    };
   }
 
   static async update() {}

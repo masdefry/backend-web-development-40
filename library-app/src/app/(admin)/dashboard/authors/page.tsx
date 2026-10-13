@@ -1,16 +1,9 @@
 'use client';
 import { axiosInstance } from '@/lib/axios-instance.lib';
 import { PaginatedApiResponse } from '@/types/api-response.type';
+import { Author } from '@/types/author.type';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-
-export type Author = {
-  id: string;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt: Date;
-};
 
 export default function AuthorsPage() {
   const { data: authorsData } = useQuery({

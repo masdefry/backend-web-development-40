@@ -31,10 +31,11 @@ export class BooksController {
 
   static async get(req: Request, res: Response) {
     try {
-      const { page = 1 } = req.query;
+      const { page = 1, limit = 10 } = req.query;
 
-      const { total, totalPage, limit, books } = await BooksService.get(
+      const { total, totalPage, books } = await BooksService.get(
         parseInt(page as string),
+        parseInt(limit as string)
       );
 
       res.status(200).json({
@@ -43,9 +44,9 @@ export class BooksController {
         data: books,
         meta: {
           total,
-          page,
+          page: Number(page),
           totalPage,
-          limit,
+          limit: Number(limit),
         },
       });
     } catch (error) {
