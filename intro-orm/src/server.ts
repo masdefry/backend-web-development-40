@@ -3,6 +3,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import cors, { CorsOptions } from 'cors';
 import { authorsRoute } from './routes/authors.route';
 import { BooksRoute } from './features/books/books.route';
+import { AppError } from './errors/app.error';
 
 const PORT: number = parseInt(process.env.PORT!);
 const API_PREFIX: string = process.env.API_PREFIX!;
@@ -35,10 +36,17 @@ app.use(`${API_PREFIX}/books`, BooksRoute);
 
 /* Centralized Error */
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
+  if (error instanceof AppError)
+    return res.status(error?.status).json({
+      success: false,
+      message: error?.message,
+      data: {},
+    });
+
   if (error instanceof Error)
     return res.status(500).json({
       success: false,
-      message: error?.message,
+      message: 'Internal Server Error',
       data: {},
     });
 });

@@ -1,20 +1,15 @@
-import { prisma } from '../../configs/prisma-client.config';
 import {
-  BookCreateInput,
-  BookUncheckedCreateInput,
-} from '../../generated/prisma/models';
+  CreateBookInput,
+  GetBookInput,
+} from '../../validators/books.validator';
+import { prisma } from '../../configs/prisma-client.config';
+import { AppError } from '../../errors/app.error';
 
 export class BooksService {
-  static async create({
-    title,
-    isbn,
-    description,
-    category,
-    authorId,
-  }: BookUncheckedCreateInput) {
+  static async create({ body }: CreateBookInput) {
     const findBookByISBN = await prisma.book.findUnique({
       where: {
-        isbn,
+        isbn: body?.isbn,
       },
     });
 
@@ -23,30 +18,31 @@ export class BooksService {
       ISBN BEDA, AUTHOR SAMA V
       ISBN SAMA, AUTHOR BEDA X
     */
-    if (findBookByISBN) throw new Error(`ISBN = ${isbn} already exists`);
+    if (findBookByISBN)
+      throw new AppError(409, `ISBN = ${body?.isbn} already exists`);
 
     const findAuthorById = await prisma.author.findUnique({
       where: {
-        id: authorId,
+        id: body?.authorId,
       },
     });
 
     if (!findAuthorById)
-      throw new Error(`Author with id = ${authorId} not found`);
+      throw new AppError(404, `Author with id = ${body?.authorId} not found`);
 
     return await prisma.book.create({
       data: {
-        title,
-        isbn,
-        description,
-        category,
-        authorId,
+        title: body?.title,
+        isbn: body?.isbn,
+        description: body?.description,
+        category: body?.category,
+        authorId: body?.authorId,
       },
     });
   }
 
-  static async get(page: number, limit: number) {
-    const offset = (page - 1) * limit;
+  static async get({ query }: GetBookInput) {
+    const offset = (query?.page - 1) * query?.limit;
 
     const books = await prisma.book.findMany({
       include: {
@@ -59,7 +55,7 @@ export class BooksService {
       where: {
         deletedAt: null,
       },
-      take: limit,
+      take: query?.limit,
       skip: offset,
     });
 
@@ -69,12 +65,13 @@ export class BooksService {
       },
     });
 
-    const totalPage = Math.ceil(totalBooks / limit);
+    const totalPage = Math.ceil(totalBooks / query?.limit);
 
     return {
+      page: query?.page,
       total: totalBooks,
       totalPage,
-      limit,
+      limit: query?.limit,
       books,
     };
   }

@@ -4,5 +4,6 @@ export class AppError extends Error {
     public message: string,
   ) {
     super(message);
+    this.status = status;
   }
 }
