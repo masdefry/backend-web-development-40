@@ -37,5 +37,17 @@ export const getBookSchema = z.object({
   }),
 });
 
+export const updateBookSchema = z.object({
+  body: z.object({
+    authorId,
+    category,
+    title,
+    description,
+  }),
+  params: z.object({
+    isbn,
+  }),
+});
+
 export type CreateBookInput = z.infer<typeof createBookSchema>;
-export type GetBookInput = z.infer<typeof getBookSchema>
+export type GetBookInput = z.infer<typeof getBookSchema>;

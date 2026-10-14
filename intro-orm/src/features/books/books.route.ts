@@ -23,5 +23,5 @@ import { BooksController } from './books.controller';
 export const BooksRoute = Router();
 
 BooksRoute.post('/', BooksController.create);
-BooksRoute.put('/', BooksController.update);
+BooksRoute.put('/:isbn', BooksController.update);
 BooksRoute.get('/', BooksController.get); 

@@ -4,6 +4,7 @@ import { validate } from '../../validators/validate';
 import {
   createBookSchema,
   getBookSchema,
+  updateBookSchema,
 } from '../../validators/books.validator';
 
 export class BooksController {
@@ -41,6 +42,11 @@ export class BooksController {
 
   static async update(req: Request, res: Response) {
     try {
+      const { params, body } = validate(updateBookSchema, {
+        body: req?.body,
+        params: req?.params,
+      });
+      
       await BooksService.update();
     } catch (error) {}
   }
