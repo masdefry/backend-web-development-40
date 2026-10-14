@@ -1,9 +1,9 @@
 'use client';
 import { axiosInstance } from '@/lib/axios-instance.lib';
 import { PaginatedApiResponse } from '@/types/api-response.type';
+import { Author } from '@/types/author.type';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { Author } from '../authors/page';
 type Book = {
   isbn: string;
   title: string;
@@ -16,16 +16,17 @@ type Book = {
 };
 
 type BookWithAuthor = Book & {
-  authors: Pick<Author, 'name'>
-}
+  authors: Pick<Author, 'name'>;
+};
 
 export default function AuthorsPage() {
   const { data: booksData } = useQuery({
     queryKey: ['books'],
     queryFn: async () => {
       const res =
-        await axiosInstance.get<PaginatedApiResponse<BookWithAuthor[]>>('/books');
-
+        await axiosInstance.get<PaginatedApiResponse<BookWithAuthor[]>>(
+          '/books',
+        );
       return res?.data?.data;
     },
   });
