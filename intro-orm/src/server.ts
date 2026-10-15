@@ -4,6 +4,7 @@ import cors, { CorsOptions } from 'cors';
 import { authorsRoute } from './routes/authors.route';
 import { BooksRoute } from './features/books/books.route';
 import { AppError } from './errors/app.error';
+import { MulterError } from 'multer';
 
 const PORT: number = parseInt(process.env.PORT!);
 const API_PREFIX: string = process.env.API_PREFIX!;
@@ -36,12 +37,23 @@ app.use(`${API_PREFIX}/books`, BooksRoute);
 
 /* Centralized Error */
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
+  console.log(error);
   if (error instanceof AppError)
     return res.status(error?.status).json({
       success: false,
       message: error?.message,
       data: {},
     });
+
+  if (error instanceof MulterError) {
+    if (error.code === 'LIMIT_FILE_SIZE') {
+      return res.status(413).json({
+        success: false,
+        message: `File size exceeds the maximum limit of 5 MB`,
+        data: {},
+      });
+    }
+  }
 
   if (error instanceof Error)
     return res.status(500).json({

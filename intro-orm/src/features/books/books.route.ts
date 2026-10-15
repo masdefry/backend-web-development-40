@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { BooksController } from './books.controller';
+import { uploadMiddleware } from '../../middlewares/upload.middleware';
 
 // export class BooksRoute {
 //   private route: Router;
@@ -16,12 +17,18 @@ import { BooksController } from './books.controller';
 //   }
 
 //   getRoutes(){
-//     return this.route; 
+//     return this.route;
 //   }
 // }
 
 export const BooksRoute = Router();
 
-BooksRoute.post('/', BooksController.create);
+BooksRoute.post(
+  '/',
+  uploadMiddleware(['jpg', 'jpeg', 'png', 'svg', 'webp']).fields([
+    { name: 'coverImage', maxCount: 1 },
+  ]),
+  BooksController.create,
+);
 BooksRoute.put('/:isbn', BooksController.update);
-BooksRoute.get('/', BooksController.get); 
+BooksRoute.get('/', BooksController.get);

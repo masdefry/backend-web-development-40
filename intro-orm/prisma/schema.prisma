@@ -41,6 +41,7 @@ model Book {
   description       String          @db.Text
   category          Categories
   authorId          String
+  coverImageUrl     String?          @db.Text
   authors           Author          @relation(fields: [authorId], references: [id])
   book_has_branches BookHasBranch[]
   borrowing_items   BorrowingItem[]
