@@ -25,7 +25,7 @@ export const BooksRoute = Router();
 
 BooksRoute.post(
   '/',
-  uploadMiddleware(['jpg', 'jpeg', 'png', 'svg', 'webp']).fields([
+  uploadMiddleware(['jpg', 'jpeg', 'png', 'svg', 'webp'], 'MEMORY').fields([
     { name: 'coverImage', maxCount: 1 },
   ]),
   BooksController.create,
