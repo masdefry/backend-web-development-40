@@ -4,9 +4,11 @@ import {
 } from '../../validators/books.validator';
 import { prisma } from '../../configs/prisma-client.config';
 import { AppError } from '../../errors/app.error';
+import { cloudinaryUpload } from '../../lib/cloudinary.lib';
 
 export class BooksService {
   static async create({ body }: CreateBookInput, files: Express.Multer.File[]) {
+    console.log(files);
     const findBookByISBN = await prisma.book.findUnique({
       where: {
         isbn: body?.isbn,
@@ -30,7 +32,11 @@ export class BooksService {
     if (!findAuthorById)
       throw new AppError(404, `Author with id = ${body?.authorId} not found`);
 
-    const filePath = files[0]?.path?.split('\\').slice(-3).join('/');
+    // Untuk DiskStorage
+    // const filePath = files[0]?.path?.split('\\').slice(-3).join('/');
+
+    // Untuk ke CloudinaryUpload
+    const cloudinaryUploadedUrl = await cloudinaryUpload(files[0]?.buffer);
 
     return await prisma.book.create({
       data: {
@@ -39,7 +45,7 @@ export class BooksService {
         description: body?.description,
         category: body?.category,
         authorId: body?.authorId,
-        coverImageUrl: filePath, 
+        coverImageUrl: `${cloudinaryUploadedUrl}`,
       },
     });
   }
