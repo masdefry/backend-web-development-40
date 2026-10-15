@@ -6,7 +6,7 @@ import { prisma } from '../../configs/prisma-client.config';
 import { AppError } from '../../errors/app.error';
 
 export class BooksService {
-  static async create({ body }: CreateBookInput) {
+  static async create({ body }: CreateBookInput, files: Express.Multer.File[]) {
     const findBookByISBN = await prisma.book.findUnique({
       where: {
         isbn: body?.isbn,
@@ -30,6 +30,8 @@ export class BooksService {
     if (!findAuthorById)
       throw new AppError(404, `Author with id = ${body?.authorId} not found`);
 
+    const filePath = files[0]?.path?.split('\\').slice(-3).join('/');
+
     return await prisma.book.create({
       data: {
         title: body?.title,
@@ -37,6 +39,7 @@ export class BooksService {
         description: body?.description,
         category: body?.category,
         authorId: body?.authorId,
+        coverImageUrl: filePath, 
       },
     });
   }

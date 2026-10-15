@@ -9,9 +9,14 @@ import {
 
 export class BooksController {
   static async create(req: Request, res: Response) {
+    const files: Express.Multer.File[] =
+      (
+        req.files as { [fieldname: string]: Express.Multer.File[] } | undefined
+      )?.['coverImage'] ?? [];
+
     const { body } = validate(createBookSchema, { body: req.body });
 
-    const createdBook = await BooksService.create({ body });
+    const createdBook = await BooksService.create({ body }, files);
 
     res.status(201).json({
       success: true,
@@ -37,8 +42,6 @@ export class BooksController {
         totalPage,
         limit: limit,
       },
-
-      
     });
   }
 

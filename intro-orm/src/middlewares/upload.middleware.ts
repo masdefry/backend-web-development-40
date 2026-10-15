@@ -40,6 +40,6 @@ export const uploadMiddleware = (allowedFileExtensions: string[]) => {
   return multer({
     storage: storage,
     fileFilter,
-    limits: { fileSize: 1 },
+    limits: { fileSize: 1024 * 1024 * 5 },
   });
 };
