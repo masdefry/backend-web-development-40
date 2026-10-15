@@ -1,6 +1,7 @@
 'use client';
 import {
   CreateBookInput,
+  CreateBookOutput,
   createBookSchema,
 } from '@/features/(admin)/dashboard/books/create/validations/createBookSchema';
 import { axiosInstance } from '@/lib/axios-instance.lib';
@@ -23,7 +24,7 @@ export default function CreateBookPage() {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<CreateBookInput, unknown, CreateBookOutput>({
     resolver: zodResolver(createBookSchema),
   });
 
@@ -44,8 +45,16 @@ export default function CreateBookPage() {
   });
 
   const { mutate: createBookMutation } = useMutation({
-    mutationFn: async (data: CreateBookInput) => {
-      await axiosInstance.post('/books', data);
+    mutationFn: async (data: CreateBookOutput) => {
+      const fd = new FormData();
+      fd.append('isbn', data?.isbn);
+      fd.append('title', data?.title);
+      fd.append('description', data?.description);
+      fd.append('authorId', data?.authorId);
+      fd.append('category', data?.category);
+      fd.append('coverImage', data?.coverImage[0]);
+
+      await axiosInstance.post('/books', fd);
     },
     onSuccess: (res) => {
       console.log(res);
@@ -153,6 +162,18 @@ export default function CreateBookPage() {
                 ))}
               </select>
               <p className='label text-red-600'>{errors?.category?.message}</p>
+            </fieldset>
+            <fieldset className='fieldset'>
+              <legend className='fieldset-legend'>Pick a Book Cover</legend>
+              <input
+                multiple={false}
+                type='file'
+                className='file-input'
+                {...register('coverImage')}
+              />
+              <p className='label text-red-600'>
+                {errors?.coverImage?.message}
+              </p>
             </fieldset>
             <div className='flex justify-end mt-5'></div>
             <button type='submit' className='btn btn-primary'>
