@@ -1,4 +1,7 @@
-import { registerStaffSchema } from '../../validators/auths.validator';
+import {
+  loginStaffSchema,
+  registerStaffSchema,
+} from '../../validators/auths.validator';
 import { validate } from '../../validators/validate';
 import { Request, Response } from 'express';
 import { AuthsService } from './auths.service';
@@ -13,6 +16,27 @@ export class AuthsController {
       success: true,
       message: 'Staff registered successfully',
       data: staff,
+    });
+  }
+  static async login(req: Request, res: Response) {
+    const { body } = validate(loginStaffSchema, { body: req.body });
+
+    const { token, staffWithoutPassword } = await AuthsService.login({ body });
+
+    res.cookie(
+      'token',
+      { token },
+      {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+      },
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Staff logged in successfully',
+      data: staffWithoutPassword,
     });
   }
 }

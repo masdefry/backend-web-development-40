@@ -43,4 +43,12 @@ export const registerStaffSchema = z.object({
   }),
 });
 
+export const loginStaffSchema = z.object({
+  body: z.object({
+    email, 
+    password
+  })
+})
+
 export type RegisterStaffInput = z.infer<typeof registerStaffSchema>;
+export type LoginStaffInput = z.infer<typeof loginStaffSchema>; 

@@ -1,7 +1,12 @@
 import { AppError } from '../../errors/app.error';
 import { prisma } from '../../configs/prisma-client.config';
-import { RegisterStaffInput } from '../../validators/auths.validator';
+import {
+  LoginStaffInput,
+  RegisterStaffInput,
+} from '../../validators/auths.validator';
 import { Bcrypt } from '../../lib/bcrypt.lib';
+import { Jwt } from '../../lib/jwt.lib';
+import 'dotenv/config';
 
 export class AuthsService {
   static async register({ body }: RegisterStaffInput) {
@@ -38,8 +43,43 @@ export class AuthsService {
       },
     });
 
-    const { password, ...staffWithoutPassword } = staff;
+    const { password, phoneNumber, ...staffWithoutPassword } = staff;
 
     return staffWithoutPassword;
+  }
+
+  static async login({ body }: LoginStaffInput) {
+    const findStaffByEmail = await prisma.staff.findUnique({
+      where: {
+        email: body?.email,
+      },
+    });
+
+    if (!findStaffByEmail)
+      throw new AppError(404, 'Email or password is incorrect');
+
+    const isComparePassword = await Bcrypt.comparePassword(
+      body?.password,
+      findStaffByEmail?.password,
+    );
+
+    if (!isComparePassword)
+      throw new AppError(404, 'Email or password is incorrect');
+
+    const token = await Jwt.generate(
+      {
+        id: findStaffByEmail?.id,
+        role: findStaffByEmail?.role,
+      },
+      process.env.JWT_SECRET_KEY!,
+      { expiresIn: '1h' },
+    );
+
+    const { password, phoneNumber, ...staffWithoutPassword } = findStaffByEmail;
+
+    return {
+      token,
+      staffWithoutPassword,
+    };
   }
 }
