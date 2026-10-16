@@ -82,7 +82,7 @@ model Staff {
   fullName    String       @db.VarChar(100)
   email       String       @unique
   phoneNumber String       @db.VarChar(15)
-  password    String       @db.VarChar(25)
+  password    String       @db.VarChar
   branchId    String
   branches    Branch       @relation(fields: [branchId], references: [id])
   shiftId     String
