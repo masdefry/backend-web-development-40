@@ -6,6 +6,7 @@ import { BooksRoute } from './features/books/books.route';
 import { AppError } from './errors/app.error';
 import { MulterError } from 'multer';
 import { AuthsRoute } from './features/auths/auths.route';
+import cookieParser from 'cookie-parser';
 
 const PORT: number = parseInt(process.env.PORT!);
 const API_PREFIX: string = process.env.API_PREFIX!;
@@ -33,6 +34,7 @@ const corsOptions: CorsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
 app.use(`${API_PREFIX}/authors`, authorsRoute);
 app.use(`${API_PREFIX}/books`, BooksRoute);
 app.use(`${API_PREFIX}/auths`, AuthsRoute); 

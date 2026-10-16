@@ -25,7 +25,7 @@ export class AuthsController {
 
     res.cookie(
       'token',
-      { token },
+      token,
       {
         httpOnly: true,
         secure: true,

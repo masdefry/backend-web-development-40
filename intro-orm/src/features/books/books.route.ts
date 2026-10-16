@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { BooksController } from './books.controller';
 import { uploadMiddleware } from '../../middlewares/upload.middleware';
+import { authenticate, authorize } from '../../middlewares/auth.middleware';
 
 // export class BooksRoute {
 //   private route: Router;
@@ -25,6 +26,8 @@ export const BooksRoute = Router();
 
 BooksRoute.post(
   '/',
+  authenticate, 
+  authorize(['STAFF']), 
   uploadMiddleware(['jpg', 'jpeg', 'png', 'svg', 'webp'], 'MEMORY').fields([
     { name: 'coverImage', maxCount: 1 },
   ]),

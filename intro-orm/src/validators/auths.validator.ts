@@ -1,3 +1,4 @@
+import { Role } from '../generated/prisma/enums';
 import * as z from 'zod';
 
 const fullName = z
@@ -28,9 +29,7 @@ const shiftId = z
   .string()
   .min(1, 'Shift ID is required field');
 
-const id = z
-  .string()
-  .uuid('Staff ID must be a valid UUID');
+const role = z.enum(Role)
 
 export const registerStaffSchema = z.object({
   body: z.object({
@@ -40,6 +39,7 @@ export const registerStaffSchema = z.object({
     password,
     branchId,
     shiftId,
+    role
   }),
 });
 
