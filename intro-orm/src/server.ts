@@ -5,6 +5,7 @@ import { authorsRoute } from './routes/authors.route';
 import { BooksRoute } from './features/books/books.route';
 import { AppError } from './errors/app.error';
 import { MulterError } from 'multer';
+import { AuthsRoute } from './features/auths/auths.route';
 
 const PORT: number = parseInt(process.env.PORT!);
 const API_PREFIX: string = process.env.API_PREFIX!;
@@ -34,6 +35,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(`${API_PREFIX}/authors`, authorsRoute);
 app.use(`${API_PREFIX}/books`, BooksRoute);
+app.use(`${API_PREFIX}/auths`, AuthsRoute); 
 
 /* Centralized Error */
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
