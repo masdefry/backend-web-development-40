@@ -29,7 +29,8 @@ export class AuthsController {
       {
         httpOnly: true,
         secure: true,
-        sameSite: 'strict',
+        sameSite: 'lax',
+        path: '/'
       },
     );
 
