@@ -10,9 +10,11 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { axiosInstance } from '@/lib/axios-instance.lib';
 import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 export default function AdminLoginPage() {
-  const router = useRouter()
+  const router = useRouter();
+  const {setAuth} = useAuthStore(); 
 
   const {
     register,
@@ -25,8 +27,11 @@ export default function AdminLoginPage() {
   const { mutate: loginMutation } = useMutation({
     mutationFn: async (data: LoginAdminInput) => {
       const res = await axiosInstance.post('/auths/login', data); 
+
+      return res?.data?.data; 
     },
     onSuccess: (res) => {
+      setAuth(res?.fullName, res?.role); 
       router?.push('/dashboard'); 
     }, 
     onError: (err) => {

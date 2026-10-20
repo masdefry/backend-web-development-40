@@ -1,4 +1,5 @@
 'use client';
+import withAuthGuard from '@/hoc/withAuthGuard';
 import { axiosInstance } from '@/lib/axios-instance.lib';
 import { PaginatedApiResponse } from '@/types/api-response.type';
 import { Author } from '@/types/author.type';
@@ -19,7 +20,7 @@ type BookWithAuthor = Book & {
   authors: Pick<Author, 'name'>;
 };
 
-export default function AuthorsPage() {
+function BooksPage() {
   const { data: booksData } = useQuery({
     queryKey: ['books'],
     queryFn: async () => {
@@ -85,3 +86,5 @@ export default function AuthorsPage() {
     </>
   );
 }
+
+export default withAuthGuard(BooksPage, ['STAFF']);

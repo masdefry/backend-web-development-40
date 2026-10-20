@@ -1,5 +1,6 @@
 import { RiHome9Line } from 'react-icons/ri';
 import { GoPeople } from 'react-icons/go';
+import Link from 'next/link';
 export default function Sidebar() {
   return (
     <>
@@ -29,6 +30,17 @@ export default function Sidebar() {
           >
             <GoPeople className='text-xl' />
             <span className='is-drawer-close:hidden'>Authors</span>
+          </button>
+        </li>
+        <li>
+          <button
+            className='is-drawer-close:tooltip is-drawer-close:tooltip-right text-white '
+            data-tip='Homepage'
+          >
+            <Link href={'/dashboard/books'}>
+              <RiHome9Line className='text-xl' />
+              <span className='is-drawer-close:hidden'>Books</span>
+            </Link>
           </button>
         </li>
       </ul>
