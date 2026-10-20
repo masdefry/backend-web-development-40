@@ -23,21 +23,29 @@ export class AuthsController {
 
     const { token, staffWithoutPassword } = await AuthsService.login({ body });
 
-    res.cookie(
-      'token',
-      token,
-      {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'lax',
-        path: '/'
-      },
-    );
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+      path: '/',
+    });
 
     res.status(200).json({
       success: true,
       message: 'Staff logged in successfully',
       data: staffWithoutPassword,
+    });
+  }
+
+  static async me(req: Request, res: Response) {
+    const { payload } = res?.locals;
+
+    const staff = await AuthsService.me(payload?.id);
+
+    res.status(200).json({
+      success: true,
+      message: 'Session login valid',
+      data: staff,
     });
   }
 }

@@ -82,4 +82,16 @@ export class AuthsService {
       staffWithoutPassword,
     };
   }
+
+  static async me(id: string) {
+    return await prisma.staff.findUnique({
+      where: {
+        id 
+      }, 
+      select: {
+        fullName: true, 
+        role: true 
+      }
+    });
+  }
 }
