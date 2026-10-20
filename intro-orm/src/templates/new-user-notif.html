@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome New Staff</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      background-color: #f5f7fb;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #333333;
+    "
+  >
+    <table
+      role="presentation"
+      cellpadding="0"
+      cellspacing="0"
+      width="100%"
+      style="background-color: #f5f7fb; padding: 40px 16px"
+    >
+      <tr>
+        <td align="center">
+          <table
+            role="presentation"
+            cellpadding="0"
+            cellspacing="0"
+            width="600"
+            style="
+              max-width: 600px;
+              background-color: #ffffff;
+              border-radius: 12px;
+              overflow: hidden;
+            "
+          >
+            <!-- Header -->
+            <tr>
+              <td
+                align="center"
+                style="background-color: #0f172a; padding: 40px 24px"
+              >
+                <h1
+                  style="
+                    margin: 0;
+                    color: #ffffff;
+                    font-size: 28px;
+                    font-weight: bold;
+                  "
+                >
+                  Ruang Baca Company
+                </h1>
+              </td>
+            </tr>
+
+            <!-- Content -->
+            <tr>
+              <td style="padding: 40px 32px">
+                <h2 style="margin: 0 0 20px; font-size: 24px; color: #111827">
+                  Verify your email address & set password
+                </h2>
+
+                <p style="margin: 0 0 16px; font-size: 16px; line-height: 24px">
+                  Hi <strong>{{name}}</strong>,
+                </p>
+
+                <p style="margin: 0 0 24px; font-size: 16px; line-height: 24px">
+                  Thanks for signing up! Please verify your email address by
+                  clicking the button below.
+                </p>
+
+                <!-- Button -->
+                <table
+                  role="presentation"
+                  cellpadding="0"
+                  cellspacing="0"
+                  align="center"
+                  style="margin: 32px auto"
+                >
+                  <tr>
+                    <td
+                      align="center"
+                      bgcolor="#2563eb"
+                      style="border-radius: 8px"
+                    >
+                      <a
+                        href="{{verificationUrl}}"
+                        target="_blank"
+                        style="
+                          display: inline-block;
+                          padding: 14px 32px;
+                          font-size: 16px;
+                          font-weight: bold;
+                          color: #ffffff;
+                          text-decoration: none;
+                        "
+                      >
+                        Verify Email & Set Password
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+                <p
+                  style="
+                    margin: 0 0 16px;
+                    font-size: 15px;
+                    color: #6b7280;
+                    line-height: 24px;
+                  "
+                >
+                  If the button above doesn't work, copy and paste the following
+                  URL into your browser:
+                </p>
+
+                <p
+                  style="
+                    word-break: break-all;
+                    font-size: 14px;
+                    background: #f3f4f6;
+                    padding: 12px;
+                    border-radius: 6px;
+                    color: #2563eb;
+                  "
+                >
+                  {{verificationUrl}}
+                </p>
+
+                <hr
+                  style="
+                    border: none;
+                    border-top: 1px solid #e5e7eb;
+                    margin: 32px 0;
+                  "
+                />
+
+                <p
+                  style="
+                    margin: 0;
+                    font-size: 14px;
+                    color: #9ca3af;
+                    line-height: 22px;
+                  "
+                >
+                  If you didn't create an account, you can safely ignore this
+                  email.
+                </p>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td
+                align="center"
+                style="
+                  padding: 24px;
+                  background-color: #f9fafb;
+                  color: #9ca3af;
+                  font-size: 13px;
+                "
+              >
+                © {{year}} {{companyName}}. All rights reserved.
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
