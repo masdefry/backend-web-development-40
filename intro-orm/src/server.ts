@@ -7,6 +7,7 @@ import { AppError } from './errors/app.error';
 import { MulterError } from 'multer';
 import { AuthsRoute } from './features/auths/auths.route';
 import cookieParser from 'cookie-parser';
+import { TokenExpiredError } from 'jsonwebtoken';
 
 const PORT: number = parseInt(process.env.PORT!);
 const API_PREFIX: string = process.env.API_PREFIX!;
@@ -30,7 +31,7 @@ const corsOptions: CorsOptions = {
 
     return callback(null, true);
   },
-  credentials: true
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
@@ -38,7 +39,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(`${API_PREFIX}/authors`, authorsRoute);
 app.use(`${API_PREFIX}/books`, BooksRoute);
-app.use(`${API_PREFIX}/auths`, AuthsRoute); 
+app.use(`${API_PREFIX}/auths`, AuthsRoute);
 
 /* Centralized Error */
 app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
@@ -58,6 +59,14 @@ app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
         data: {},
       });
     }
+  }
+
+  if (error instanceof TokenExpiredError) {
+    return res.status(401).json({
+      success: false,
+      message: 'Access token has expired',
+      data: {},
+    });
   }
 
   if (error instanceof Error)
