@@ -19,8 +19,16 @@ const shifts = [
 ];
 
 async function main() {
-  await prisma.branch.createMany({ data: branches });
-  await prisma.shift.createMany({ data: shifts });
+  // await prisma.branch.createMany({ data: branches });
+  // await prisma.shift.createMany({ data: shifts });
+  await prisma.staff.update({
+    data: {
+      status: 'VERIFIED'
+    }, 
+    where: {
+      id: 'a0eb74cf-1ca5-4a93-8eb2-d931eb14acd6'
+    }
+  })
 }
 
 main()

@@ -21,15 +21,13 @@ const password = z
   .min(1, 'Password is required field')
   .max(25, 'Password have maximum 25 characters');
 
-const branchId = z
-  .string()
-  .min(1, 'Branch ID is required field');
+const confirmPassword = z.string().min(1, 'Confirm password is required field');
 
-const shiftId = z
-  .string()
-  .min(1, 'Shift ID is required field');
+const branchId = z.string().min(1, 'Branch ID is required field');
 
-const role = z.enum(Role)
+const shiftId = z.string().min(1, 'Shift ID is required field');
+
+const role = z.enum(Role);
 
 export const registerStaffSchema = z.object({
   body: z.object({
@@ -39,16 +37,32 @@ export const registerStaffSchema = z.object({
     password,
     branchId,
     shiftId,
-    role
+    role,
   }),
 });
 
 export const loginStaffSchema = z.object({
   body: z.object({
-    email, 
-    password
-  })
-})
+    email,
+    password,
+  }),
+});
+
+export const setPasswordStaffSchema = z.object({
+  params: z.object({
+    userId: z.string().min(1, 'User ID is required field'),
+  }),
+  body: z
+    .object({
+      password,
+      confirmPassword,
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: 'Passwords do not match',
+      path: ['confirmPassword'],
+    }),
+});
 
 export type RegisterStaffInput = z.infer<typeof registerStaffSchema>;
-export type LoginStaffInput = z.infer<typeof loginStaffSchema>; 
+export type LoginStaffInput = z.infer<typeof loginStaffSchema>;
+export type SetPasswordStaffInput = z.infer<typeof setPasswordStaffSchema>;

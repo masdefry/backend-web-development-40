@@ -1,6 +1,7 @@
 import {
   loginStaffSchema,
   registerStaffSchema,
+  setPasswordStaffSchema,
 } from '../../validators/auths.validator';
 import { validate } from '../../validators/validate';
 import { Request, Response } from 'express';
@@ -46,6 +47,21 @@ export class AuthsController {
       success: true,
       message: 'Session login valid',
       data: staff,
+    });
+  }
+
+  static async setPassword(req: Request, res: Response) {
+    const { body, params } = validate(setPasswordStaffSchema, {
+      body: req.body,
+      params: req.params,
+    });
+
+    const { safeUser } = await AuthsService.setPassword({ body, params });
+
+    res.status(200).json({
+      success: true,
+      message: 'Password updated successfully',
+      data: safeUser,
     });
   }
 }

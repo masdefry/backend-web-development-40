@@ -3,13 +3,15 @@ import { prisma } from '../../configs/prisma-client.config';
 import {
   LoginStaffInput,
   RegisterStaffInput,
+  SetPasswordStaffInput,
 } from '../../validators/auths.validator';
 import { Bcrypt } from '../../lib/bcrypt.lib';
 import { Jwt } from '../../lib/jwt.lib';
 import 'dotenv/config';
 import transporter from '../../lib/transporter.lib';
 import path from 'node:path';
-import fs from 'fs'; 
+import fs from 'fs';
+import Handlebars from 'handlebars';
 
 export class AuthsService {
   static async register({ body }: RegisterStaffInput) {
@@ -37,23 +39,28 @@ export class AuthsService {
 
     if (!findShiftById) throw new AppError(404, 'Shift ID not found');
 
-    const passwordHashed = await Bcrypt.hashPassword(body?.password);
-
     const staff = await prisma.staff.create({
       data: {
         ...body,
-        password: passwordHashed,
       },
     });
 
-    const mainDir = path.join(process.cwd()); 
-    const templateHTML = fs.readFileSync(`${mainDir}/src/templates/new-user-notif.html`)
+    const mainDir = path.join(process.cwd());
+    const templateHTML = fs.readFileSync(
+      `${mainDir}/src/templates/account-activation.html`,
+      'utf-8',
+    );
+    const templateHTMLCompiled = Handlebars.compile(templateHTML);
+    const html = templateHTMLCompiled({
+      bebasss: body?.email,
+      verificationUrl: `http://localhost:3000/set-password/${staff?.id}`,
+    });
 
     await transporter.sendMail({
-      to: body?.email, 
-      subject: 'Welcome New User', 
-      html: templateHTML
-    }); 
+      to: body?.email,
+      subject: 'Welcome New User',
+      html: html,
+    });
 
     const { password, phoneNumber, ...staffWithoutPassword } = staff;
 
@@ -66,6 +73,12 @@ export class AuthsService {
         email: body?.email,
       },
     });
+
+    if (findStaffByEmail?.status === 'UNVERIFIED')
+      throw new AppError(
+        401,
+        'Status unverified. Please activate your account!',
+      );
 
     if (!findStaffByEmail)
       throw new AppError(404, 'Email or password is incorrect');
@@ -98,39 +111,41 @@ export class AuthsService {
   static async me(id: string) {
     return await prisma.staff.findUnique({
       where: {
-        id 
-      }, 
+        id,
+      },
       select: {
-        fullName: true, 
-        role: true 
-      }
+        fullName: true,
+        role: true,
+      },
     });
   }
+
+  static async setPassword({ body, params }: SetPasswordStaffInput) {
+    const findStaff = await prisma.staff.findUnique({
+      where: {
+        id: params?.userId,
+      },
+    });
+
+    if (!findStaff) throw new AppError(404, 'User not found');
+
+    const passwordHashed = await Bcrypt.hashPassword(body?.password);
+
+    const staff = await prisma.staff.update({
+      data: {
+        password: passwordHashed,
+        status: 'VERIFIED'
+      },
+      where: {
+        id: params?.userId,
+      },
+    });
+
+    const { password, phoneNumber, ...safeUser } = staff;
+
+    return { safeUser };
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*
   Business Rules Register New Staff: 

@@ -26,6 +26,7 @@
     "cors": "^2.8.6",
     "dotenv": "^16.6.1",
     "express": "^5.2.1",
+    "handlebars": "^4.7.10",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.4.0",
     "nodemailer": "^10.1.7",

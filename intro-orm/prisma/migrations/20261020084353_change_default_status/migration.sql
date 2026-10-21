@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "staffs" ALTER COLUMN "status" SET DEFAULT 'VERIFIED';

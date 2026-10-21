@@ -82,12 +82,18 @@ enum Role {
   STAFF
 }
 
+enum StaffStatus { 
+  VERIFIED
+  UNVERIFIED
+}
+
 model Staff {
   id          String       @id @default(uuid())
   fullName    String       @db.VarChar(100)
   email       String       @unique
   phoneNumber String       @db.VarChar(15)
-  password    String       @db.VarChar
+  password    String       @db.VarChar @default("Abc12345")
+  status      StaffStatus       @default(UNVERIFIED)
   branchId    String
   branches    Branch       @relation(fields: [branchId], references: [id])
   shiftId     String
